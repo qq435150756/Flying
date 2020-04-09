@@ -1,0 +1,53 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+/* 应用配置文件 */
+apply from: "config.gradle"
+/* 声明gradle脚本自身需要使用的资源（依赖项、第三方插件、maven仓库地址等） */
+buildscript {
+    /*仓库*/
+    repositories {
+        google()
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+
+    }
+    /* 依赖,区分应用依赖*/
+    dependencies {
+        // Gradle插件依赖
+        classpath 'com.android.tools.build:gradle:3.6.2'
+        //Gradle Android Maven plugin
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+        //Gradle Bintray Plugin
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+/* 项目整体 */
+allprojects {
+    repositories {
+        google()
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url "https://jitpack.io" }
+
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+/* 全局配置 */
+configurations.all {
+    /* 解决策略 */
+    resolutionStrategy {
+        //循环遍历每一个依赖
+        eachDependency { details ->
+            /* 强制将导入的依赖改为指定依赖 */
+            if (details.requested.name == 'appcompat'
+                    && details.requested.name == 'annotation'
+                    && details.requested.name == 'recyclerview') {
+                details.useVersion rootProject.ext.version["androidXSdkVersion"]
+            }
+        }
+    }
+}
