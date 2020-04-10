@@ -28,7 +28,7 @@ android {
         /* JUit自动化测试框架 */
         testInstrumentationRunner rootProject.ext.dependencies["androidJUnitRunner"]
         /* 设置 ArchivesBaseName,打包的名称  */
-        //setProperty("archivesBaseName", "DarkHole_${versionName}_${versionCode}")
+        setProperty("archivesBaseName", "DarkHole_${versionName}_${versionCode}_${releaseTime()}")
 
         /* 配置ndkBuild,指令参数配置 */
 //        externalNativeBuild {
@@ -48,45 +48,38 @@ android {
 
     /* 将签名密钥信息写在本地local.properties中*/
     //加载资源
-//    Properties properties = new Properties()
-//    InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
-//    properties.load(inputStream)
-//    //读取文件
-//    def keyDir = properties.getProperty('key.file')
-//    //读取字段
-//    def key_file = file(keyDir)
-//    def key_keyAlias = properties.getProperty('keyAlias')
-//    def key_keyPassword = properties.getProperty('keyPassword')
-//    def key_storePassword = properties.getProperty('storePassword')
-//
-//    /* 签名配置 */
-//    signingConfigs {
-//        debug {
-//            storeFile key_file
-//            storePassword key_storePassword
-//            keyAlias key_keyAlias
-//            keyPassword key_keyPassword
-//        }
-//
-//        release {
-//            //密钥仓库文件
-//            storeFile key_file
-//            //密钥仓库文件密码
-//            storePassword key_storePassword
-//            //密钥别名
-//            keyAlias key_keyAlias
-//            //密钥密码
-//            keyPassword key_keyPassword
-//        }
-//    }
+    Properties properties = new Properties()
+    InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
+    properties.load(inputStream)
+    //读取文件
+    def keyDir = properties.getProperty('key.file')
+    //读取字段
+    def key_file = file(keyDir)
+    def key_keyAlias = properties.getProperty('keyAlias')
+    def key_keyPassword = properties.getProperty('keyPassword')
+    def key_storePassword = properties.getProperty('storePassword')
+
+    /* 签名配置 */
     signingConfigs {
-        config {
-            keyAlias 'box'
-            keyPassword '7660454'
-            storeFile file('ki.keystore')
-            storePassword '7660454'
+        debug {
+            storeFile key_file
+            storePassword key_storePassword
+            keyAlias key_keyAlias
+            keyPassword key_keyPassword
+        }
+
+        release {
+            //密钥仓库文件
+            storeFile key_file
+            //密钥仓库文件密码
+            storePassword key_storePassword
+            //密钥别名
+            keyAlias key_keyAlias
+            //密钥密码
+            keyPassword key_keyPassword
         }
     }
+
     /* 构建类型配置 */
     buildTypes {
         /* 测试版本 */
@@ -101,7 +94,7 @@ android {
             /* 混淆规则配置文件 */
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             /* 签名配置 */
-         //   signingConfig signingConfigs.config
+            signingConfig signingConfigs.debug
         }
         /* 生产版本 */
         release {
@@ -113,7 +106,7 @@ android {
             /* 对打包的应用程序进行优化 */
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+            signingConfig signingConfigs.release
         }
 
         /* 预生产版本 */
@@ -143,6 +136,10 @@ android {
     }
     /* 设置资源路径 */
 //    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
+}
+
+static def releaseTime() {
+    return new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("GMT+08:00"))
 }
 
 /* 依赖 */
