@@ -37,17 +37,17 @@ task clean(type: Delete) {
 }
 
 /* 全局配置 */
-configurations.all {
-    /* 解决策略 */
-    resolutionStrategy {
-        //循环遍历每一个依赖
-        eachDependency { details ->
-            /* 强制将导入的依赖改为指定依赖 */
-            if (details.requested.name == 'appcompat'
-                    && details.requested.name == 'annotation'
-                    && details.requested.name == 'recyclerview') {
-                details.useVersion rootProject.ext.version["androidXSdkVersion"]
-            }
-        }
-    }
-}
+//configurations.all {
+//    /* 解决策略 */
+//    resolutionStrategy {
+//        //循环遍历每一个依赖
+//        eachDependency { details ->
+//            /* 强制将导入的依赖改为指定依赖 */
+//            if (details.requested.name == 'appcompat'
+//                    && details.requested.name == 'annotation'
+//                    && details.requested.name == 'recyclerview') {
+//                details.useVersion rootProject.ext.version["androidXSdkVersion"]
+//            }
+//        }
+//    }
+//}
